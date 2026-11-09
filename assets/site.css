@@ -333,7 +333,8 @@ em { font-style: italic; }
 }
 .is-loaded .hero-title em, html:not(.js) .hero-title em { background-size: 100% 100%; }
 @media (max-width: 640px) { .hero-br { display: none; } }
-.hero-sub { max-width: 560px; margin-top: 28px; color: var(--ink-2); font-size: clamp(18px, 1.45vw, 20px); line-height: 1.6; }
+.hero-sub { max-width: 560px; margin-top: 28px; color: var(--ink-2); font-size: clamp(18px, 1.45vw, 20px); line-height: 1.6; text-wrap: balance; }
+.hero-punch { display: block; margin-top: 6px; color: var(--ink); font-weight: 500; }
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 26px; margin-top: 38px; }
 .hero-points { display: flex; flex-wrap: wrap; gap: 10px 26px; margin: 44px 0 0; padding: 0; list-style: none; }
 .hero-points li { display: flex; align-items: center; gap: 8px; color: var(--ink-3); font-size: 14.5px; font-weight: 500; }
@@ -417,12 +418,12 @@ em { font-style: italic; }
 @media (hover: hover) { .node { cursor: pointer; } }
 
 .network { --fx: 44%; --fy: 52%; }
-.node[data-node="acc"] { --x: 14%; --y: 24%; }
-.node[data-node="wills"] { --x: 80%; --y: 12%; }
-.node[data-node="family"] { --x: 93%; --y: 82%; }
-.node[data-node="mortgage"] { --x: 66%; --y: 95%; }
-.node[data-node="estate"] { --x: 16%; --y: 84%; }
-.node[data-node="business"] { --x: 5%; --y: 54%; }
+.node[data-node="bank"] { --x: 14%; --y: 24%; }
+.node[data-node="cowork"] { --x: 80%; --y: 12%; }
+.node[data-node="agency"] { --x: 93%; --y: 82%; }
+.node[data-node="software"] { --x: 66%; --y: 95%; }
+.node[data-node="assoc"] { --x: 16%; --y: 84%; }
+.node[data-node="community"] { --x: 5%; --y: 54%; }
 
 .toast {
   position: absolute; right: 0; top: 34%; z-index: 3;
@@ -450,8 +451,8 @@ em { font-style: italic; }
 @media (max-width: 1200px) {
   .toast { position: relative; right: auto; top: auto; width: min(100%, 420px); margin: 18px auto 0; }
   .network { --fx: 50%; }
-  .node[data-node="wills"] { --x: 86%; }
-  .node[data-node="mortgage"] { --x: 72%; }
+  .node[data-node="cowork"] { --x: 86%; }
+  .node[data-node="software"] { --x: 72%; }
 }
 @media (max-width: 980px) {
   .hero-grid { grid-template-columns: 1fr; gap: 56px; }
@@ -460,12 +461,12 @@ em { font-style: italic; }
 @media (max-width: 640px) {
   .network { aspect-ratio: 1 / 1.06; --fx: 50%; --fy: 50%; }
   .firm { width: 22%; }
-  .node[data-node="acc"] { --x: 13%; --y: 11%; }
-  .node[data-node="wills"] { --x: 87%; --y: 23%; }
-  .node[data-node="business"] { --x: 6%; --y: 34%; }
-  .node[data-node="family"] { --x: 93%; --y: 68%; }
-  .node[data-node="estate"] { --x: 9%; --y: 77%; }
-  .node[data-node="mortgage"] { --x: 72%; --y: 91%; }
+  .node[data-node="bank"] { --x: 13%; --y: 11%; }
+  .node[data-node="cowork"] { --x: 87%; --y: 23%; }
+  .node[data-node="community"] { --x: 6%; --y: 34%; }
+  .node[data-node="agency"] { --x: 93%; --y: 68%; }
+  .node[data-node="assoc"] { --x: 9%; --y: 77%; }
+  .node[data-node="software"] { --x: 72%; --y: 91%; }
   .node-label { font-size: 12.5px; padding: 5px 11px; }
   .firm-sub { display: none; }
   .toast { position: relative; right: auto; top: auto; width: 100%; margin-top: 18px; }
@@ -475,59 +476,14 @@ em { font-style: italic; }
 }
 @media (max-width: 360px) {
   .node-label { font-size: 11.5px; padding: 4px 9px; }
-  .node[data-node="family"] { --y: 65%; }
-  .node[data-node="estate"] { --y: 79%; }
+  .node[data-node="agency"] { --y: 65%; }
+  .node[data-node="assoc"] { --y: 79%; }
 }
 
 /* ==========================================================================
-   01 · Who we are
+   01 · What we do (example cards) and 02 · Examples (tabs)
    ========================================================================== */
-.who-title { margin-top: 28px; max-width: 19ch; font-size: clamp(36px, 4.8vw, 70px); line-height: 1.03; letter-spacing: -.033em; }
-.who-title em { color: var(--blue); }
-.who-grid {
-  display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
-  gap: clamp(40px, 6vw, 104px); align-items: end; margin-top: clamp(52px, 6vw, 92px);
-}
-.lead { max-width: 460px; color: var(--ink-2); font-size: clamp(18px, 1.5vw, 21px); line-height: 1.6; }
-.founder {
-  display: flex; align-items: baseline; gap: 16px; max-width: 460px;
-  margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line);
-  color: var(--ink-2); font-size: 16px;
-}
-.founder .mono { flex: none; color: var(--blue); font-size: 11px; }
-.contrast { display: flex; flex-direction: column; gap: clamp(16px, 2vw, 24px); padding-top: clamp(26px, 3vw, 40px); border-top: 1px solid var(--ink); }
-.contrast-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px clamp(16px, 2.2vw, 30px); }
-.contrast-key { flex: 0 0 118px; color: var(--ink-3); font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; }
-.strike, .build { font-family: var(--serif); font-size: clamp(34px, 4.2vw, 60px); line-height: 1.06; letter-spacing: -.025em; }
-.strike { position: relative; color: #98a5c0; }
-.strike::after {
-  content: ""; position: absolute; left: -4%; right: -4%; top: 55%; height: 2px; background: var(--blue);
-  transform: scaleX(0); transform-origin: left center; transition: transform .8s var(--ease) calc(.55s + var(--sd, 0s));
-}
-.is-in .strike::after, html:not(.js) .strike::after { transform: none; }
-.build { position: relative; display: inline-block; padding-bottom: 20px; color: var(--blue); font-style: italic; }
-.thread { position: absolute; left: 0; right: 0; bottom: 4px; height: 12px; }
-.thread::before {
-  content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1.5px; margin-top: -.75px;
-  background: linear-gradient(90deg, var(--blue-l), var(--blue-xl));
-  transform: scaleX(0); transform-origin: left; transition: transform 1.3s var(--ease) 1.1s;
-}
-.thread i {
-  position: absolute; top: 50%; width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; border-radius: 50%;
-  background: #fff; border: 1.5px solid var(--blue);
-  opacity: 0; transform: scale(.4); transition: opacity .4s var(--ease), transform .5s var(--ease);
-}
-.thread i:nth-child(1) { left: 0; transition-delay: 1.1s; }
-.thread i:nth-child(2) { left: 50%; transition-delay: 1.55s; }
-.thread i:nth-child(3) { left: 100%; transition-delay: 2s; background: var(--blue); }
-.is-in .thread::before, html:not(.js) .thread::before { transform: none; }
-.is-in .thread i, html:not(.js) .thread i { opacity: 1; transform: none; }
-@media (max-width: 900px) { .who-grid { grid-template-columns: 1fr; } }
-
-/* ==========================================================================
-   02 · What we do
-   ========================================================================== */
-.what { background: linear-gradient(180deg, var(--white) 0%, var(--cloud) 16%, var(--cloud) 100%); }
+.partners { background: linear-gradient(180deg, var(--white) 0%, var(--cloud) 16%, var(--cloud) 100%); }
 .moments {
   display: grid; grid-template-columns: minmax(220px, .34fr) minmax(0, 1fr);
   gap: clamp(24px, 4vw, 64px); align-items: stretch; margin-top: clamp(48px, 6vw, 84px);
@@ -605,7 +561,7 @@ html:not(.js) .moment-panel[hidden] { display: block; margin-bottom: 40px; }
 }
 .moments-foot .mono { flex: none; color: var(--blue); font-size: 11px; }
 
-.services { margin-top: clamp(84px, 10vw, 144px); }
+.services { margin-top: clamp(56px, 7vw, 104px); }
 .services-head { display: flex; align-items: center; gap: 14px; color: var(--ink-3); }
 .services-head::after { content: ""; flex: 1; height: 1px; background: var(--line-2); }
 .services-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 22px; }
@@ -684,12 +640,13 @@ html:not(.js) .moment-panel[hidden] { display: block; margin-bottom: 40px; }
   gap: clamp(32px, 6vw, 96px); margin-top: clamp(16px, 3vw, 40px);
 }
 .how-steps { grid-area: steps; position: relative; margin: 0; padding: 0 0 14vh; list-style: none; }
-.how-steps::before, .how-steps::after { content: ""; position: absolute; left: 7px; top: 36vh; bottom: 50vh; width: 1px; }
+/* The progress line runs from the first step's dot to the last one's (half a step in from each end). */
+.how-steps::before, .how-steps::after { content: ""; position: absolute; left: 7px; top: 31vh; bottom: 45vh; width: 1px; }
 .how-steps::before { background: rgba(255, 255, 255, .14); }
 .how-steps::after { background: var(--signal); transform-origin: top; transform: scaleY(var(--hp, 0)); transition: transform .9s var(--ease); }
 .how-step {
   position: relative; display: flex; flex-direction: column; justify-content: center; gap: 16px;
-  min-height: 72vh; padding: 32px 0 32px 50px; opacity: .32; transition: opacity .6s var(--ease);
+  min-height: 62vh; padding: 32px 0 32px 50px; opacity: .32; transition: opacity .6s var(--ease);
 }
 .how-step.is-active { opacity: 1; }
 .how-step::before {
@@ -744,13 +701,14 @@ html:not(.js) .moment-panel[hidden] { display: block; margin-bottom: 40px; }
   transition: stroke-dashoffset 1.2s var(--ease-io), opacity .5s var(--ease), stroke-width .5s var(--ease);
   transition-delay: calc(var(--i) * 110ms);
 }
-.reach-2 .rlink { stroke-dashoffset: 0; }
-.reach-3 .rlink { opacity: 1; stroke-width: 1.6; }
+/* Six steps: 1 Research, 2 Offer, 3 Deal, 4 Partners, 5 Launch, 6 Growth */
+.reach-4 .rlink { stroke-dashoffset: 0; }
+.reach-5 .rlink { opacity: 1; stroke-width: 1.6; }
 .badge-inner {
   opacity: 0; transform: scale(.4) translateY(6px); transform-box: fill-box; transform-origin: center;
   transition: opacity .45s var(--ease), transform .55s var(--ease); transition-delay: calc(.5s + var(--i) * 140ms);
 }
-.how-stage[data-current="2"] .badge-inner { opacity: 1; transform: none; }
+.how-stage[data-current="4"] .badge-inner { opacity: 1; transform: none; }
 .badge-inner rect { fill: #f3f7ff; }
 .badge-inner path { fill: none; stroke: var(--blue); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .how .comet-tail { stroke: #cfddff; stroke-width: 2; }
@@ -766,7 +724,7 @@ html:not(.js) .moment-panel[hidden] { display: block; margin-bottom: 40px; }
   box-shadow: 0 0 0 8px rgba(138, 171, 255, .08), 0 0 0 18px rgba(138, 171, 255, .04);
   transition: box-shadow .8s var(--ease);
 }
-.reach-3 .bp-firm-core { box-shadow: 0 0 0 8px rgba(138, 171, 255, .14), 0 0 0 20px rgba(138, 171, 255, .06), 0 0 70px 12px rgba(92, 130, 240, .45); }
+.reach-5 .bp-firm-core { box-shadow: 0 0 0 8px rgba(138, 171, 255, .14), 0 0 0 20px rgba(138, 171, 255, .06), 0 0 70px 12px rgba(92, 130, 240, .45); }
 .bp-firm-core.is-ping { animation: bump .6s var(--ease); }
 
 .bp-caption { position: absolute; left: 16px; right: 16px; bottom: 14px; height: 16px; color: #a9bbe6; font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; }
@@ -774,16 +732,28 @@ html:not(.js) .moment-panel[hidden] { display: block; margin-bottom: 40px; }
 .how-stage[data-current="1"] [data-cap="1"],
 .how-stage[data-current="2"] [data-cap="2"],
 .how-stage[data-current="3"] [data-cap="3"],
-.how-stage[data-current="4"] [data-cap="4"] { opacity: 1; transform: none; }
+.how-stage[data-current="4"] [data-cap="4"],
+.how-stage[data-current="5"] [data-cap="5"],
+.how-stage[data-current="6"] [data-cap="6"] { opacity: 1; transform: none; }
 
-.bp-dash {
+/* Floating cards: the example offer (step 2), the deal (step 3) and the dashboard (step 6) */
+.bp-dash, .bp-card {
   position: absolute; right: 4.5%; bottom: 7%; width: min(58%, 290px); padding: 16px 18px;
   border: 1px solid rgba(169, 191, 244, .25); border-radius: 10px;
   background: rgba(9, 24, 64, .8); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
   box-shadow: 0 30px 60px -30px rgba(0, 0, 0, .6);
   opacity: 0; transform: translateY(14px); transition: opacity .6s var(--ease), transform .7s var(--ease);
 }
-.how-stage[data-current="4"] .bp-dash { opacity: 1; transform: none; }
+.how-stage[data-current="2"] [data-card="offer"],
+.how-stage[data-current="3"] [data-card="deal"],
+.how-stage[data-current="6"] .bp-dash { opacity: 1; transform: none; }
+.bp-card-big { margin-top: 12px; color: #fff; font-family: var(--serif); font-size: clamp(28px, 2.6vw, 38px); line-height: 1; letter-spacing: -.02em; }
+.bp-card-text { margin-top: 8px; color: #afc0e8; font-size: 13px; line-height: 1.45; }
+.bp-deal { display: grid; gap: 8px; margin: 12px 0 0; padding: 0; list-style: none; }
+.bp-deal li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-top: 8px; border-top: 1px solid rgba(169, 191, 244, .16); }
+.bp-deal li:first-child { padding-top: 0; border-top: 0; }
+.bp-deal span { color: #9fb3e0; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+.bp-deal b { color: #fff; font-size: 13.5px; font-weight: 500; text-align: right; }
 .bp-dash-head { display: flex; justify-content: space-between; gap: 12px; color: #9fb3e0; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
 .bp-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; margin-top: 14px; }
 .bp-metric b { display: block; color: #fff; font-family: var(--serif); font-size: clamp(24px, 2.3vw, 32px); font-weight: 400; line-height: 1; font-variant-numeric: tabular-nums; }
@@ -794,7 +764,7 @@ html:not(.js) .moment-panel[hidden] { display: block; margin-bottom: 40px; }
   background: linear-gradient(180deg, var(--signal), rgba(138, 171, 255, .25));
   transform: scaleY(0); transform-origin: bottom; transition: transform .8s var(--ease); transition-delay: calc(.3s + var(--i) * 70ms);
 }
-.how-stage[data-current="4"] .bp-bars i { transform: none; }
+.how-stage[data-current="6"] .bp-bars i { transform: none; }
 
 @media (max-width: 900px) {
   .how-layout { display: block; }
@@ -809,7 +779,15 @@ html:not(.js) .moment-panel[hidden] { display: block; margin-bottom: 40px; }
   .how-steps::before, .how-steps::after { top: calc(6vh + 16px); bottom: calc(46vh - 16px); }
   .how-step { min-height: 52vh; justify-content: flex-start; gap: 12px; padding: 6vh 0 6vh 42px; }
   .how-step::before { top: calc(6vh + 10px); margin-top: 0; }
-  .bp-dash { left: 4%; right: 4%; bottom: 9%; width: auto; padding: 12px 14px; }
+  /* Small diagram: caption moves to the top so the cards can sit low, below "You" */
+  .fig-label { display: none; }
+  .bp-caption { top: 12px; bottom: auto; }
+  .bp-dash, .bp-card { left: 4%; right: 4%; bottom: 4%; width: auto; padding: 12px 14px; }
+  .bp-card-big { margin-top: 8px; font-size: 26px; }
+  .bp-card-text { margin-top: 4px; font-size: 12px; }
+  .bp-deal { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+  .bp-deal li { flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 3px; padding-top: 0; border-top: 0; }
+  .bp-deal b { font-size: 12.5px; line-height: 1.3; text-align: left; }
   .bp-metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
   .bp-metric b { font-size: 22px; }
   .bp-metric span { font-size: 10.5px; line-height: 1.25; }
@@ -848,21 +826,8 @@ html:not(.js) .moment-panel[hidden] { display: block; margin-bottom: 40px; }
 .lane li:nth-child(5) { --i: 4; } .lane li:nth-child(6) { --i: 5; } .lane li:nth-child(7) { --i: 6; }
 .is-in .lane li, html:not(.js) .lane li { opacity: 1; transform: none; }
 
-.why-row { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(36px, 5vw, 88px); padding-top: clamp(56px, 7vw, 100px); }
-.why-commit { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(26px, 3vw, 48px); align-items: center; }
-.ring { position: relative; width: clamp(176px, 16vw, 224px); aspect-ratio: 1; }
-.ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
-.ring-track { fill: none; stroke: var(--mist); stroke-width: 2; }
-.ring-arc { fill: none; stroke: var(--blue); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 2s var(--ease-io) .3s; }
-.is-in .ring-arc, html:not(.js) .ring-arc { stroke-dashoffset: 0; }
-.ring-dot { fill: #fff; stroke: var(--line-2); stroke-width: 1.5; transition: fill .3s var(--ease), stroke .3s var(--ease); transition-delay: calc(.3s + var(--i) * .25s); }
-.is-in .ring-dot, html:not(.js) .ring-dot { fill: var(--blue); stroke: var(--blue); }
-.ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-.ring-center b { color: var(--ink); font-family: var(--serif); font-size: clamp(54px, 5vw, 74px); font-weight: 400; line-height: .9; }
-.ring-center span { margin-top: 8px; color: var(--ink-3); font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; line-height: 1.5; text-transform: uppercase; }
-.why-list { display: flex; flex-direction: column; }
-.why-item { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 20px; padding: 30px 0; border-top: 1px solid var(--line); }
-.why-item:first-child { padding-top: 0; border-top: 0; }
+.why-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 4vw, 64px); padding-top: clamp(56px, 7vw, 100px); }
+.why-item { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 20px; }
 .why-item svg { width: 40px; height: 40px; color: var(--blue); }
 .why-item svg * { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .why-item svg .fill { fill: currentColor; stroke: none; }
@@ -870,9 +835,11 @@ html:not(.js) .moment-panel[hidden] { display: block; margin-bottom: 40px; }
 .why-item p { margin-top: 10px; color: var(--ink-2); }
 @media (max-width: 960px) {
   .why-feature, .why-row { grid-template-columns: 1fr; }
+  .why-row { gap: 0; }
+  .why-item { padding: 30px 0; border-top: 1px solid var(--line); }
+  .why-item:first-child { padding-top: 0; border-top: 0; }
 }
 @media (max-width: 560px) {
-  .why-commit { grid-template-columns: 1fr; }
   .lane { grid-template-columns: 1fr; gap: 14px; }
   .lane ul { grid-template-columns: 1fr; }
 }

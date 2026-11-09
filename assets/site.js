@@ -224,7 +224,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     6. Hero network: professionals send referrals to "Your firm"
+     6. Hero network: partner companies send new customers to "You"
      ------------------------------------------------------------------------ */
   const initNetwork = () => {
     const net = $('[data-network]');
@@ -375,7 +375,7 @@
   initNetwork();
 
   /* ------------------------------------------------------------------------
-     7. "What we do": professional tabs (WAI-ARIA tabs pattern)
+     7. "Examples": partnership-type tabs (WAI-ARIA tabs pattern)
      ------------------------------------------------------------------------ */
   const initMoments = () => {
     const wrap = $('[data-moments]');
@@ -421,7 +421,8 @@
   initMoments();
 
   /* ------------------------------------------------------------------------
-     8. "How we do it": the diagram evolves as each step scrolls into view
+     8. "How it works": the diagram evolves as each step scrolls into view.
+        Steps: 1 Research, 2 Offer, 3 Deal, 4 Partners, 5 Launch, 6 Growth.
      ------------------------------------------------------------------------ */
   const initHow = () => {
     const section = $('#how');
@@ -433,6 +434,8 @@
     const firmCore = $('[data-bp-firm]', section);
     const counters = $$('[data-count]', stage);
     if (!stage || !svg || !steps.length) return;
+    const LAST = steps.length; // the dashboard counts up on the last step
+    const FLOW_FROM = 5; // from "Launch" onwards, new customers flow in
 
     const C = 260;
     // [angle in degrees, radius, fit score 1-3]. Score 3 = the firms we recruit.
@@ -487,7 +490,7 @@
       li++;
     });
 
-    // Referral flow (steps 3 and 4)
+    // Customer flow (steps 5 and 6)
     let flowing = false;
     let inView = false;
     let raf = 0;
@@ -520,7 +523,7 @@
       clearTimeout(timer);
     };
 
-    // Dashboard numbers count up the first time step 4 is reached
+    // Dashboard numbers count up the first time the last step is reached
     counters.forEach((el) => { el.textContent = '0'; });
     let counted = false;
     const countUp = () => {
@@ -547,12 +550,12 @@
       if (n === current) return;
       current = n;
       stage.dataset.current = String(n);
-      for (let s = 1; s <= 4; s++) stage.classList.toggle(`reach-${s}`, n >= s);
+      for (let s = 1; s <= LAST; s++) stage.classList.toggle(`reach-${s}`, n >= s);
       steps.forEach((st) => st.classList.toggle('is-active', Number(st.dataset.step) === n));
-      list.style.setProperty('--hp', ((n - 1) / (steps.length - 1)).toFixed(3));
-      if (n >= 3) startFlow();
+      list.style.setProperty('--hp', ((n - 1) / (LAST - 1)).toFixed(3));
+      if (n >= FLOW_FROM) startFlow();
       else stopFlow();
-      if (n === 4) countUp();
+      if (n === LAST) countUp();
     };
 
     const mqMobile = window.matchMedia('(max-width: 900px)');
@@ -575,12 +578,12 @@
     new IntersectionObserver(([entry]) => {
       inView = entry.isIntersecting;
       if (inView && current === 0) setStep(1);
-      if (inView && current >= 3) startFlow();
+      if (inView && current >= FLOW_FROM) startFlow();
       else if (!inView) stopFlow();
     }).observe(stage);
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) stopFlow();
-      else if (current >= 3) startFlow();
+      else if (current >= FLOW_FROM) startFlow();
     });
   };
   initHow();
@@ -600,13 +603,13 @@
       if (action.includes('YOUR_FORM_ID')) {
         const body = [
           `Name: ${data.get('name')}`,
-          `Firm: ${data.get('firm')}`,
+          `Company: ${data.get('company')}`,
           `Email: ${data.get('email')}`,
           `Phone: ${data.get('phone') || '-'}`,
           '',
-          "I'd like to book a call about referral partnerships.",
+          "I'd like to book a call about partnerships.",
         ].join('\n');
-        const subject = `Book a call: ${data.get('firm') || 'Adviser enquiry'}`;
+        const subject = `Book a call: ${data.get('company') || 'Website enquiry'}`;
         window.location.href = `mailto:hello@metricgrowth.io?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         status.textContent = 'Opening your email app with your details filled in…';
         return;
