@@ -147,7 +147,10 @@
   <!-- ============================== THE FILM ==============================
        Poster: a clean frame of the film (the partner map), with points of light running down its
        threads to "You". Pressing play swaps it for the film itself, in place.
-       Assets come from Video production/metric-growth-film/tools/website_assets.sh -->
+       Assets come from Video production/metric-growth-film/tools/website_assets.sh
+       Two sources: the film cut into short segments (HLS), which Safari, iPhones and current Chrome
+       play natively and which needs no byte-range support from the host, then the single MP4 for
+       browsers without HLS. -->
   <section class="film-sec" id="film" aria-labelledby="film-title">
     <div class="container">
       <div class="film plate" data-film>
@@ -194,11 +197,13 @@
             <span class="film-you"></span><span class="film-you r2"></span>
           </div>
           <video class="film-video" controls playsinline preload="none" aria-label="The Metric Growth film, one minute, with sound">
+            <source src="assets/film/hls/film.m3u8" type="application/vnd.apple.mpegurl">
             <source src="assets/film/metric-growth-film.mp4" type="video/mp4">
             <track kind="captions" src="assets/film/captions.vtt" srclang="en" label="English">
           </video>
           <!-- without JavaScript: the same film as a plain player, with the still as its poster -->
           <noscript><video class="film-video" controls playsinline preload="none" poster="assets/film/poster.jpg" aria-label="The Metric Growth film, one minute, with sound">
+            <source src="assets/film/hls/film.m3u8" type="application/vnd.apple.mpegurl">
             <source src="assets/film/metric-growth-film.mp4" type="video/mp4">
             <track kind="captions" src="assets/film/captions.vtt" srclang="en" label="English">
           </video></noscript>
