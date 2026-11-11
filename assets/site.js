@@ -201,6 +201,37 @@
   );
   $$('main > section[id]').forEach((s) => navIO.observe(s));
 
+  // The header's hover highlight slides from link to link
+  const nav = $('.nav');
+  if (nav && navLinks.length) {
+    const ind = document.createElement('span');
+    ind.className = 'nav-ind';
+    ind.setAttribute('aria-hidden', 'true');
+    nav.appendChild(ind);
+    let shown = false;
+    const show = (a) => {
+      if (!shown) ind.style.transitionProperty = 'opacity'; // first appearance: no slide in from the edge
+      ind.style.width = a.offsetWidth + 'px';
+      ind.style.transform = 'translateX(' + a.offsetLeft + 'px)';
+      if (!shown) {
+        void ind.offsetWidth;
+        ind.style.transitionProperty = '';
+      }
+      ind.style.opacity = '1';
+      shown = true;
+    };
+    const hide = () => {
+      ind.style.opacity = '0';
+      shown = false;
+    };
+    navLinks.forEach((a) => {
+      a.addEventListener('pointerenter', () => show(a));
+      a.addEventListener('focus', () => show(a));
+      a.addEventListener('blur', hide);
+    });
+    nav.addEventListener('pointerleave', hide);
+  }
+
   /* ------------------------------------------------------------------------
      5. Hero: the dot grid lights up around the pointer
      ------------------------------------------------------------------------ */
@@ -385,7 +416,12 @@
     const list = tabs[0] && tabs[0].parentElement;
     const mqChips = window.matchMedia('(max-width: 860px)');
 
+    let autoOff = false; // set once the visitor picks a type themselves
     const select = (i, { focus = false, user = false } = {}) => {
+      if (user) {
+        autoOff = true;
+        wrap.classList.remove('is-auto');
+      }
       tabs.forEach((t, j) => {
         const on = j === i;
         t.setAttribute('aria-selected', String(on));
@@ -417,6 +453,27 @@
         select(j, { focus: true, user: true });
       });
     });
+
+    // Until then the types play one after another (wide screens only). The open tab's underline is a
+    // CSS progress bar; when that animation ends, the next type opens. Hovering or tabbing in pauses it.
+    const mqWide = window.matchMedia('(min-width: 861px)');
+    const setAuto = () => wrap.classList.toggle('is-auto', !autoOff && !reduced() && mqWide.matches);
+    if (list) {
+      list.addEventListener('animationend', (e) => {
+        if (e.animationName !== 'tabProgress' || !wrap.classList.contains('is-auto')) return;
+        const i = tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
+        select((i + 1) % tabs.length);
+      });
+      new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) setAuto();
+          wrap.classList.toggle('is-paused', !entry.isIntersecting);
+        },
+        { threshold: 0.4 }
+      ).observe(wrap);
+      onChange(mqWide, setAuto);
+      onChange(mqReduce, setAuto);
+    }
   };
   initMoments();
 
@@ -589,7 +646,108 @@
   initHow();
 
   /* ------------------------------------------------------------------------
-     9. Contact form. Posts to Formspree once a real form ID is set in the
+     9. The film. The poster has its own play button; pressing it (or the
+        hero's "Watch the film" link) plays the film in place with the
+        browser's controls. In its last seconds the film shows a "Book a call"
+        button: a real link sits over it. It pauses when scrolled out of view.
+     ------------------------------------------------------------------------ */
+  const initFilm = () => {
+    const frame = $('[data-film]');
+    if (!frame) return;
+    const video = $('video', frame);
+    const playBtn = $('[data-film-play]', frame);
+    const again = $('[data-film-again]', frame);
+    const cta = $('[data-film-cta]', frame);
+    if (!video || !playBtn) return;
+    const CTA_FROM = 58.4; // seconds: the film's "Book a call" button has landed
+    video.controls = false; // the poster does the inviting until the film starts
+    video.tabIndex = -1;
+    let counted = false;
+    const track = (name) => {
+      if (typeof window.gtag === 'function') window.gtag('event', name, { film: 'the-dot-60s' });
+    };
+    const setLive = (el, on) => {
+      if (el) el.tabIndex = on ? 0 : -1;
+    };
+    const start = () => {
+      frame.classList.add('is-playing');
+      frame.classList.remove('is-ended');
+      video.controls = true;
+      video.tabIndex = 0;
+      setLive(again, false);
+      const p = video.play();
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+      if (!counted) {
+        counted = true;
+        track('film_play');
+      }
+    };
+    playBtn.addEventListener('click', () => {
+      start();
+      video.focus({ preventScroll: true });
+    });
+    // the hero link scrolls here (it is a normal anchor) and starts the film on the way
+    $$('[data-film-open]').forEach((a) => a.addEventListener('click', start));
+    video.addEventListener('timeupdate', () => {
+      const on = video.currentTime >= CTA_FROM;
+      frame.classList.toggle('is-cta', on);
+      setLive(cta, on);
+    });
+    video.addEventListener('ended', () => {
+      frame.classList.add('is-ended', 'is-cta');
+      setLive(cta, true);
+      setLive(again, true);
+      track('film_complete');
+    });
+    video.addEventListener('play', () => {
+      frame.classList.remove('is-ended');
+      setLive(again, false);
+    });
+    if (again) {
+      again.addEventListener('click', () => {
+        video.currentTime = 0;
+        start();
+        video.focus({ preventScroll: true });
+      });
+    }
+    if (cta) cta.addEventListener('click', () => video.pause());
+    new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting && !video.paused) video.pause();
+      },
+      { threshold: 0.15 }
+    ).observe(frame);
+  };
+  initFilm();
+
+  /* ------------------------------------------------------------------------
+     10. Pointer touches (mouse only): a soft light follows the pointer across
+        the service cards, and buttons lean a few pixels towards it.
+     ------------------------------------------------------------------------ */
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    $$('[data-spot]').forEach((el) => {
+      el.addEventListener('pointermove', (e) => {
+        const r = el.getBoundingClientRect();
+        el.style.setProperty('--sx', Math.round(e.clientX - r.left) + 'px');
+        el.style.setProperty('--sy', Math.round(e.clientY - r.top) + 'px');
+      });
+    });
+    $$('.btn:not(.btn-block)').forEach((btn) => {
+      btn.addEventListener('pointermove', (e) => {
+        if (reduced()) return;
+        const r = btn.getBoundingClientRect();
+        const dx = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
+        const dy = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
+        btn.style.transform = 'translate(' + (dx * 5).toFixed(1) + 'px, ' + (dy * 4 - 1).toFixed(1) + 'px)';
+      });
+      btn.addEventListener('pointerleave', () => {
+        btn.style.transform = '';
+      });
+    });
+  }
+
+  /* ------------------------------------------------------------------------
+     11. Contact form. Posts to Formspree once a real form ID is set in the
         form's action; until then it opens the visitor's email app instead.
      ------------------------------------------------------------------------ */
   const form = $('[data-form]');
@@ -609,7 +767,7 @@
           '',
           "I'd like to book a call about partnerships.",
         ].join('\n');
-        const subject = `Book a call: ${data.get('company') || 'Website enquiry'}`;
+        const subject = `Book a call: ${data.get('company') || 'Website inquiry'}`;
         window.location.href = `mailto:hello@metricgrowth.io?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         status.textContent = 'Opening your email app with your details filled in…';
         return;
@@ -630,7 +788,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     10. Footer year
+     12. Footer year
      ------------------------------------------------------------------------ */
   $$('[data-year]').forEach((el) => { el.textContent = String(new Date().getFullYear()); });
 })();
