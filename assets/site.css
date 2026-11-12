@@ -384,7 +384,7 @@ html:not(.js) .nav a:hover { background: var(--mist); }
   100% { box-shadow: 0 0 0 0 rgba(36, 81, 199, 0); }
 }
 .hero-title {
-  margin-top: 26px; font-size: clamp(42px, 5.7vw, 86px); line-height: 1; letter-spacing: -.037em;
+  font-size: clamp(42px, 4.7vw, 68px); line-height: 1.02; letter-spacing: -.035em; text-wrap: balance;
 }
 .hero-title em {
   color: var(--blue);
@@ -1157,24 +1157,12 @@ html:not(.js) .moment-panel[hidden] { display: block; margin-bottom: 40px; }
 @supports not (background: conic-gradient(from 0deg, red, blue)) { .form-wrap::before, .form-wrap::after { display: none; } }
 .form-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-bottom: 18px; border-bottom: 1px solid var(--line); color: var(--ink-3); }
 .form-head .mono:first-child { color: var(--blue); }
-.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-.field label { color: var(--ink); font-size: 14px; font-weight: 500; }
-.field .opt { color: var(--ink-3); font-weight: 400; }
-.field input {
-  width: 100%; height: 52px; padding: 0 16px; border: 1px solid var(--line-2); border-radius: 10px;
-  background: var(--cloud); color: var(--ink); font: inherit; font-size: 16px;
-  -webkit-appearance: none; appearance: none;
-  transition: border-color .2s, box-shadow .2s, background .2s;
-}
-.field input:hover { border-color: var(--blue-xl); }
-.field input:focus { outline: none; border-color: var(--blue); background: #fff; box-shadow: 0 0 0 4px rgba(36, 81, 199, .14); }
-.form .btn { margin-top: 6px; }
-.form-note { color: var(--ink-3); font-size: 14px; text-align: center; }
-.form-status { color: var(--blue); font-size: 14.5px; font-weight: 500; text-align: center; }
-.form-status:empty { display: none; }
+/* the booking card holds Nick's Calendly; the frame is white, like the card */
+.booking { gap: 14px; }
+.booking-frame { display: block; width: 100%; height: 700px; border: 0; border-radius: 10px; background: #fff; }
+.form-note a { color: var(--blue); font-weight: 500; text-underline-offset: 3px; }
 @media (max-width: 900px) { .cta-grid { grid-template-columns: 1fr; } }
-@media (max-width: 520px) { .field-row { grid-template-columns: 1fr; } }
+@media (max-width: 520px) { .booking { padding: 16px 10px; } .booking .form-head { padding: 0 8px 14px; } .booking-frame { height: 760px; } }
 
 /* ==========================================================================
    Footer

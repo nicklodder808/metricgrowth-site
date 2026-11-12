@@ -747,45 +747,17 @@
   }
 
   /* ------------------------------------------------------------------------
-     11. Contact form. Posts to Formspree once a real form ID is set in the
-        form's action; until then it opens the visitor's email app instead.
+     11. Booking. The contact section embeds Nick's Calendly. When a visitor
+        books, Calendly tells the page, and the booking is counted in
+        Google Analytics (no personal details are passed on).
      ------------------------------------------------------------------------ */
-  const form = $('[data-form]');
-  if (form) {
-    const status = $('[data-form-status]', form);
-    const button = $('button[type="submit"]', form);
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const data = new FormData(form);
-      const action = form.getAttribute('action') || '';
-      if (action.includes('YOUR_FORM_ID')) {
-        const body = [
-          `Name: ${data.get('name')}`,
-          `Company: ${data.get('company')}`,
-          `Email: ${data.get('email')}`,
-          `Phone: ${data.get('phone') || '-'}`,
-          '',
-          "I'd like to book a call about partnerships.",
-        ].join('\n');
-        const subject = `Book a call: ${data.get('company') || 'Website inquiry'}`;
-        window.location.href = `mailto:hello@metricgrowth.io?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        status.textContent = 'Opening your email app with your details filled in…';
-        return;
-      }
-      button.disabled = true;
-      status.textContent = 'Sending…';
-      try {
-        const res = await fetch(action, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
-        if (!res.ok) throw new Error(String(res.status));
-        form.reset();
-        status.textContent = 'Thank you. We’ll be in touch shortly to find a time.';
-      } catch (err) {
-        status.textContent = 'Something went wrong. Please email hello@metricgrowth.io instead.';
-      } finally {
-        button.disabled = false;
-      }
-    });
-  }
+  window.addEventListener('message', (e) => {
+    if (e.origin !== 'https://calendly.com') return;
+    const name = e.data && e.data.event;
+    if (name === 'calendly.event_scheduled' && typeof window.gtag === 'function') {
+      window.gtag('event', 'book_call', { method: 'calendly' });
+    }
+  });
 
   /* ------------------------------------------------------------------------
      12. Footer year
