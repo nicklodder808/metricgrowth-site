@@ -537,133 +537,6 @@ html:not(.js) .nav a:hover { background: var(--mist); }
 }
 
 /* ==========================================================================
-   The film (between the hero and 01)
-   A 16:9 frame. Until play is pressed it shows a clean still of the film's partner map, with
-   points of light running down the threads to "You". Then the film plays in place.
-   ========================================================================== */
-.film-sec { position: relative; padding: 0 0 clamp(4px, .8vw, 12px); scroll-margin-top: 6px; }
-.film {
-  position: relative; isolation: isolate; aspect-ratio: 16 / 9; margin-inline: auto;
-  width: min(100%, calc((100vh - var(--header-h) - 64px) * 16 / 9));
-  border-radius: clamp(14px, 1.9vw, 28px); background: var(--deep);
-  box-shadow: 0 2px 4px rgba(11, 23, 51, .08), 0 34px 60px -30px rgba(10, 27, 71, .6), 0 90px 130px -70px rgba(27, 63, 163, .5);
-}
-.film.plate::before { inset: -11px; }
-.js .film { opacity: 0; transform: translateY(36px); }
-.is-loaded .film { opacity: 1; transform: none; transition: opacity 1s var(--ease) .95s, transform 1.2s var(--ease) .95s; }
-.film-clip { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; }
-.film-art, .film-art picture, .film-art img, .film-threads, .film-video { position: absolute; inset: 0; width: 100%; height: 100%; }
-.film-art { transform: scale(1.03); transition: transform 2.4s var(--ease); }
-.film:hover .film-art { transform: scale(1.07); }
-.film-art img { object-fit: cover; }
-/* shade for the words in the top left, and a soft foot */
-.film-art::after {
-  content: ""; position: absolute; inset: 0;
-  background:
-    linear-gradient(155deg, rgba(5, 14, 40, .82) 0%, rgba(5, 14, 40, .5) 20%, rgba(5, 14, 40, 0) 44%),
-    linear-gradient(0deg, rgba(5, 14, 40, .45) 0%, rgba(5, 14, 40, 0) 20%);
-}
-/* the threads of the still: a point of light travels each one, from the partner to "You" */
-.film-threads { filter: drop-shadow(0 0 5px rgba(138, 171, 255, .95)); }
-.film-threads use {
-  fill: none; stroke: #e2ebff; stroke-width: 3.2; stroke-linecap: round;
-  stroke-dasharray: .04 1; stroke-dashoffset: .04;
-  animation: filmFlow var(--dur, 3.6s) linear var(--del, 0s) infinite;
-}
-@keyframes filmFlow { 0% { stroke-dashoffset: .04; opacity: 0; } 8%, 88% { opacity: 1; } 100% { stroke-dashoffset: -1; opacity: 0; } }
-/* and "You" answers with a ring each time (placed on the still: 8.02% across, 53.43% down) */
-.film-you {
-  position: absolute; left: 8.02%; top: 53.43%; width: 4.6%; aspect-ratio: 1; margin: -2.3% 0 0 -2.3%;
-  border: 1.5px solid rgba(197, 212, 255, .95); border-radius: 50%; opacity: 0;
-  animation: filmPing 2.8s var(--ease) infinite;
-}
-.film-you.r2 { animation-delay: 1.4s; }
-@keyframes filmPing { 0% { opacity: .85; transform: scale(1); } 80%, 100% { opacity: 0; transform: scale(2.5); } }
-
-.film-video { background: transparent; object-fit: cover; }
-.js .film-video { opacity: 0; visibility: hidden; transition: opacity .5s var(--ease), visibility 0s .5s; }
-.js .film.is-playing .film-video { opacity: 1; visibility: visible; transition-delay: 0s; }
-.film.is-playing .film-threads, .film.is-playing .film-you { display: none; }
-
-.film-ui {
-  position: absolute; inset: 0; z-index: 2; display: grid;
-  grid-template: "label meta" auto "lockup lockup" auto "space space" 1fr / 1fr auto;
-  row-gap: clamp(14px, 2vw, 28px);
-  padding: clamp(16px, 2.6vw, 38px); color: #fff; pointer-events: none;
-  transition: opacity .5s var(--ease), visibility 0s;
-}
-html:not(.js) .film-ui { display: none; }
-.film.is-playing .film-ui { opacity: 0; visibility: hidden; transition: opacity .5s var(--ease), visibility 0s .5s; }
-.film-label { grid-area: label; display: inline-flex; align-items: center; gap: 10px; color: #e1e9ff; }
-.film-label .live-dot { background: #fff; animation-name: liveW; }
-@keyframes liveW {
-  0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, .5); }
-  70% { box-shadow: 0 0 0 8px rgba(255, 255, 255, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
-}
-.film-meta { grid-area: meta; color: var(--on-deep); }
-.film-lockup { grid-area: lockup; display: flex; align-items: center; gap: clamp(14px, 1.7vw, 26px); }
-.film-play {
-  flex: none; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; pointer-events: auto;
-  -webkit-tap-highlight-color: transparent;
-}
-/* the whole poster starts the film, not only the round button */
-.film-play::after { content: ""; position: absolute; inset: 0; border-radius: clamp(14px, 1.9vw, 28px); }
-.film-play-btn {
-  position: relative; display: grid; place-items: center; width: clamp(54px, 5.8vw, 88px); aspect-ratio: 1; border-radius: 50%;
-  background: #fff; color: var(--blue);
-  box-shadow: 0 0 0 8px rgba(255, 255, 255, .14), 0 22px 40px -16px rgba(0, 0, 0, .65);
-  transition: transform .5s var(--ease), box-shadow .5s var(--ease);
-}
-.film-play-btn svg { width: 36%; height: 36%; margin-left: 5%; }
-.film-play-btn::before {
-  content: ""; position: absolute; inset: -8px; border: 1.5px solid rgba(255, 255, 255, .75); border-radius: 50%;
-  animation: filmRing 2.6s var(--ease) infinite;
-}
-@keyframes filmRing { 0% { opacity: .8; transform: scale(1); } 75%, 100% { opacity: 0; transform: scale(1.5); } }
-.film:hover .film-play-btn { transform: scale(1.07); box-shadow: 0 0 0 13px rgba(255, 255, 255, .18), 0 26px 44px -16px rgba(0, 0, 0, .7); }
-.film-play:focus-visible { outline: none; }
-.film-play:focus-visible .film-play-btn { outline: 3px solid #fff; outline-offset: 5px; }
-.film-title { max-width: 12.5em; color: #fff; font-size: clamp(21px, 3.1vw, 46px); line-height: 1.04; letter-spacing: -.028em; }
-.film-title em { color: #b5c8ff; }
-
-/* When the film's own "Book a call" button is on screen (the last seconds), it is a real link.
-   Placed over the painted button: 312 x 80 at 804, 764 in the 1920 x 1080 frame. */
-.film-cta { position: absolute; z-index: 3; left: 41.875%; top: 70.74%; width: 16.25%; height: 7.41%; border-radius: 999px; visibility: hidden; }
-.film.is-playing.is-cta .film-cta { visibility: visible; }
-.film-cta:hover, .film-cta:focus-visible { outline: none; box-shadow: 0 0 0 6px rgba(255, 255, 255, .3); }
-.film.is-ended .film-cta { animation: filmCta 2.2s var(--ease) infinite; }
-@keyframes filmCta { 0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, .55); } 70%, 100% { box-shadow: 0 0 0 16px rgba(255, 255, 255, 0); } }
-.film-again {
-  position: absolute; z-index: 3; right: clamp(12px, 2vw, 28px); top: clamp(12px, 2vw, 28px);
-  display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px;
-  border: 1px solid rgba(255, 255, 255, .32); border-radius: 999px; background: rgba(9, 24, 64, .62);
-  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
-  color: #fff; font: 500 14px/1 var(--sans); cursor: pointer;
-  opacity: 0; visibility: hidden; transform: translateY(-6px);
-  transition: opacity .4s var(--ease), transform .4s var(--ease), visibility 0s .4s, background .25s var(--ease);
-}
-.film.is-ended .film-again { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
-.film-again:hover { background: rgba(36, 81, 199, .85); }
-
-/* the hero's link to the film */
-.link-film { gap: 12px; }
-.link-film::after { left: 48px; }
-.link-film-dot {
-  display: grid; place-items: center; flex: none; width: 34px; height: 34px; border: 1.5px solid currentColor; border-radius: 50%;
-  transition: background .3s var(--ease), border-color .3s var(--ease), color .3s var(--ease), transform .4s var(--ease);
-}
-.link-film-dot .ico { width: 12px; height: 12px; margin-left: 1px; }
-.link-film:hover .link-film-dot { background: var(--blue); border-color: var(--blue); color: #fff; transform: scale(1.08); }
-.link-film:hover .ico { transform: none; }
-
-@media (max-width: 640px) {
-  .film-meta { display: none; }
-  .film-title { font-size: clamp(19px, 5.4vw, 26px); }
-  .film-again { height: 34px; padding: 0 12px; font-size: 13px; }
-}
-
-/* ==========================================================================
    01 · What we do (example cards) and 02 · Examples (tabs)
    ========================================================================== */
 .moments {
@@ -1207,9 +1080,6 @@ html:not(.js) .moment-panel[hidden] { display: block; margin-bottom: 40px; }
     }
     @keyframes heroCopyOut { to { translate: 0 -34px; opacity: .25; } }
     @keyframes heroVisualOut { to { translate: 0 54px; scale: .96; opacity: .4; } }
-    /* the film frame grows to full size as it comes up */
-    .film { animation: filmGrow linear both; animation-timeline: view(); animation-range: entry 0% cover 32%; }
-    @keyframes filmGrow { from { scale: .9; } to { scale: 1; } }
     /* plates float a little against the page */
     .moments-panels, .lanes { animation: plateFloat linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
     @keyframes plateFloat { from { translate: 0 22px; } to { translate: 0 -22px; } }
@@ -1228,13 +1098,12 @@ html:not(.js) .moment-panel[hidden] { display: block; margin-bottom: 40px; }
     animation-duration: .001ms !important; animation-iteration-count: 1 !important; animation-delay: 0s !important;
     transition-duration: .001ms !important; transition-delay: 0s !important;
   }
-  .js [data-reveal], .js .split .w > span, .js .hero-copy > *, .js .firm-core, .js .network-svg, .js .film, .js .pillar li, .lane li, .lane-bar i, .js .why-item svg .fill { opacity: 1 !important; transform: none !important; }
+  .js [data-reveal], .js .split .w > span, .js .hero-copy > *, .js .firm-core, .js .network-svg, .js .pillar li, .lane li, .lane-bar i, .js .why-item svg .fill { opacity: 1 !important; transform: none !important; }
   .js [data-reveal="wipe"] { clip-path: none !important; }
   .js .glyph path, .js .why-item svg :not(.fill) { stroke-dashoffset: 0 !important; }
   .sec-title em, .cta h2 em { background-size: 100% 100% !important; }
   .hero-aura, .orbit, .form-wrap::before, .form-wrap::after, .st-firm .st-icon::after { animation: none !important; }
-  .form-wrap::before, .form-wrap::after, .nav-ind, .film-threads, .film-you, .film-play-btn::before { display: none !important; }
-  .film-art { transform: none !important; }
+  .form-wrap::before, .form-wrap::after, .nav-ind { display: none !important; }
   .js .node { opacity: 1 !important; }
   .station::before, .cta-comet, .orbit-dash, .live-dot { animation: none !important; }
   .station::before, .cta-comet, .sweep { display: none !important; }

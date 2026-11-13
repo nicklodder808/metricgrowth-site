@@ -646,82 +646,7 @@
   initHow();
 
   /* ------------------------------------------------------------------------
-     9. The film. The poster has its own play button; pressing it (or the
-        hero's "Watch the film" link) plays the film in place with the
-        browser's controls. In its last seconds the film shows a "Book a call"
-        button: a real link sits over it. It pauses when scrolled out of view.
-     ------------------------------------------------------------------------ */
-  const initFilm = () => {
-    const frame = $('[data-film]');
-    if (!frame) return;
-    const video = $('video', frame);
-    const playBtn = $('[data-film-play]', frame);
-    const again = $('[data-film-again]', frame);
-    const cta = $('[data-film-cta]', frame);
-    if (!video || !playBtn) return;
-    const CTA_FROM = 58.4; // seconds: the film's "Book a call" button has landed
-    video.controls = false; // the poster does the inviting until the film starts
-    video.tabIndex = -1;
-    let counted = false;
-    const track = (name) => {
-      if (typeof window.gtag === 'function') window.gtag('event', name, { film: 'the-dot-60s' });
-    };
-    const setLive = (el, on) => {
-      if (el) el.tabIndex = on ? 0 : -1;
-    };
-    const start = () => {
-      frame.classList.add('is-playing');
-      frame.classList.remove('is-ended');
-      video.controls = true;
-      video.tabIndex = 0;
-      setLive(again, false);
-      const p = video.play();
-      if (p && typeof p.catch === 'function') p.catch(() => {});
-      if (!counted) {
-        counted = true;
-        track('film_play');
-      }
-    };
-    playBtn.addEventListener('click', () => {
-      start();
-      video.focus({ preventScroll: true });
-    });
-    // the hero link scrolls here (it is a normal anchor) and starts the film on the way
-    $$('[data-film-open]').forEach((a) => a.addEventListener('click', start));
-    video.addEventListener('timeupdate', () => {
-      const on = video.currentTime >= CTA_FROM;
-      frame.classList.toggle('is-cta', on);
-      setLive(cta, on);
-    });
-    video.addEventListener('ended', () => {
-      frame.classList.add('is-ended', 'is-cta');
-      setLive(cta, true);
-      setLive(again, true);
-      track('film_complete');
-    });
-    video.addEventListener('play', () => {
-      frame.classList.remove('is-ended');
-      setLive(again, false);
-    });
-    if (again) {
-      again.addEventListener('click', () => {
-        video.currentTime = 0;
-        start();
-        video.focus({ preventScroll: true });
-      });
-    }
-    if (cta) cta.addEventListener('click', () => video.pause());
-    new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting && !video.paused) video.pause();
-      },
-      { threshold: 0.15 }
-    ).observe(frame);
-  };
-  initFilm();
-
-  /* ------------------------------------------------------------------------
-     10. Pointer touches (mouse only): a soft light follows the pointer across
+     9. Pointer touches (mouse only): a soft light follows the pointer across
         the service cards, and buttons lean a few pixels towards it.
      ------------------------------------------------------------------------ */
   if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
@@ -747,7 +672,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     11. Booking. The contact section embeds Nick's Calendly. When a visitor
+     10. Booking. The contact section embeds Nick's Calendly. When a visitor
         books, Calendly tells the page, and the booking is counted in
         Google Analytics (no personal details are passed on).
      ------------------------------------------------------------------------ */
@@ -760,7 +685,7 @@
   });
 
   /* ------------------------------------------------------------------------
-     12. Footer year
+     11. Footer year
      ------------------------------------------------------------------------ */
   $$('[data-year]').forEach((el) => { el.textContent = String(new Date().getFullYear()); });
 })();
